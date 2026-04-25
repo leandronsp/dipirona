@@ -147,3 +147,30 @@ func TestString_ReturnsReadableFormat(t *testing.T) {
 		t.Errorf("expected non-empty string")
 	}
 }
+
+func BenchmarkMultiply_10x10(b *testing.B) {
+	a := New(makeMatrix(10, 10))
+	c := New(makeMatrix(10, 10))
+	for i := 0; i < b.N; i++ {
+		a.Multiply(c)
+	}
+}
+
+func BenchmarkMultiply_50x50(b *testing.B) {
+	a := New(makeMatrix(50, 50))
+	c := New(makeMatrix(50, 50))
+	for i := 0; i < b.N; i++ {
+		a.Multiply(c)
+	}
+}
+
+func makeMatrix(rows, cols int) [][]float64 {
+	m := make([][]float64, rows)
+	for i := range m {
+		m[i] = make([]float64, cols)
+		for j := range m[i] {
+			m[i][j] = float64(i*cols + j)
+		}
+	}
+	return m
+}
