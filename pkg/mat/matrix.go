@@ -1,7 +1,10 @@
 // Package mat provides immutable matrix operations for neural networks.
 package mat
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 // Matrix represents an immutable 2D matrix of float64 values.
 type Matrix struct {
@@ -130,4 +133,25 @@ func (m Matrix) Map(fn func(float64) float64) Matrix {
 		Cols: m.Cols,
 		data: data,
 	}
+}
+
+// String returns a human-readable representation of the matrix.
+func (m Matrix) String() string {
+	var b strings.Builder
+	b.WriteString(fmt.Sprintf("Matrix(%dx%d)[", m.Rows, m.Cols))
+	for r := 0; r < m.Rows; r++ {
+		if r > 0 {
+			b.WriteString(" ")
+		}
+		b.WriteString("[")
+		for c := 0; c < m.Cols; c++ {
+			if c > 0 {
+				b.WriteString(" ")
+			}
+			b.WriteString(fmt.Sprintf("%v", m.data[r][c]))
+		}
+		b.WriteString("]")
+	}
+	b.WriteString("]")
+	return b.String()
 }

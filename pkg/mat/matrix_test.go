@@ -135,3 +135,15 @@ func TestMap_AppliesScalarFunction(t *testing.T) {
 		t.Errorf("expected At(1,1) = 8, got %v", got)
 	}
 }
+
+func TestString_ReturnsReadableFormat(t *testing.T) {
+	m := New([][]float64{
+		{1, 2},
+		{3, 4},
+	})
+
+	s := m.String()
+	if s == "" {
+		t.Errorf("expected non-empty string")
+	}
+}
