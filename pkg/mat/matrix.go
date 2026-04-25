@@ -33,3 +33,23 @@ func New(values [][]float64) Matrix {
 func (m Matrix) At(row, col int) float64 {
 	return m.data[row][col]
 }
+
+// Transpose returns a new Matrix with rows and columns swapped.
+func (m Matrix) Transpose() Matrix {
+	data := make([][]float64, m.Cols)
+	for i := range data {
+		data[i] = make([]float64, m.Rows)
+	}
+
+	for r := 0; r < m.Rows; r++ {
+		for c := 0; c < m.Cols; c++ {
+			data[c][r] = m.data[r][c]
+		}
+	}
+
+	return Matrix{
+		Rows: m.Cols,
+		Cols: m.Rows,
+		data: data,
+	}
+}
