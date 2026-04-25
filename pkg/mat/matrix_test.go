@@ -99,3 +99,23 @@ func TestMultiply_IncompatibleDimensionsPanics(t *testing.T) {
 
 	a.Multiply(b)
 }
+
+func TestZip_AddsCorrespondingElements(t *testing.T) {
+	a := New([][]float64{
+		{1, 2},
+		{3, 4},
+	})
+	b := New([][]float64{
+		{10, 20},
+		{30, 40},
+	})
+
+	result := a.Zip(b, func(x, y float64) float64 { return x + y })
+
+	if got := result.At(0, 0); got != 11 {
+		t.Errorf("expected At(0,0) = 11, got %v", got)
+	}
+	if got := result.At(1, 1); got != 44 {
+		t.Errorf("expected At(1,1) = 44, got %v", got)
+	}
+}

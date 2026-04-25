@@ -84,3 +84,29 @@ func (m Matrix) Multiply(other Matrix) Matrix {
 		data: data,
 	}
 }
+
+// Zip returns a new Matrix where each element is the result of applying fn
+// to the corresponding elements of m and other.
+// Panics if the matrices have different dimensions.
+func (m Matrix) Zip(other Matrix, fn func(float64, float64) float64) Matrix {
+	if m.Rows != other.Rows || m.Cols != other.Cols {
+		panic(fmt.Sprintf("dimension mismatch: cannot zip %dx%d with %dx%d", m.Rows, m.Cols, other.Rows, other.Cols))
+	}
+
+	data := make([][]float64, m.Rows)
+	for i := range data {
+		data[i] = make([]float64, m.Cols)
+	}
+
+	for r := 0; r < m.Rows; r++ {
+		for c := 0; c < m.Cols; c++ {
+			data[r][c] = fn(m.data[r][c], other.data[r][c])
+		}
+	}
+
+	return Matrix{
+		Rows: m.Rows,
+		Cols: m.Cols,
+		data: data,
+	}
+}
