@@ -80,3 +80,22 @@ func TestMultiply_CompatibleDimensions(t *testing.T) {
 		t.Errorf("expected At(1,1) = 154, got %v", got)
 	}
 }
+
+func TestMultiply_IncompatibleDimensionsPanics(t *testing.T) {
+	a := New([][]float64{
+		{1, 2, 3},
+		{4, 5, 6},
+	})
+	b := New([][]float64{
+		{1, 2},
+		{3, 4},
+	})
+
+	defer func() {
+		if r := recover(); r == nil {
+			t.Errorf("expected panic for incompatible dimensions")
+		}
+	}()
+
+	a.Multiply(b)
+}
