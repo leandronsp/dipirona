@@ -28,3 +28,8 @@ func New(values [][]float64) Matrix {
 		data: data,
 	}
 }
+
+// At returns the element at the given row and column.
+func (m Matrix) At(row, col int) float64 {
+	return m.data[row][col]
+}

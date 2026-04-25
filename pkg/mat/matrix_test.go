@@ -17,3 +17,17 @@ func TestNew_CreatesMatrixWithCorrectDimensions(t *testing.T) {
 		t.Errorf("expected Cols = 3, got %d", m.Cols)
 	}
 }
+
+func TestNew_DeepCopiesValues(t *testing.T) {
+	input := [][]float64{
+		{1, 2},
+		{3, 4},
+	}
+
+	m := New(input)
+	input[0][0] = 99
+
+	if got := m.At(0, 0); got != 1.0 {
+		t.Errorf("expected At(0,0) = 1.0 after mutation, got %v", got)
+	}
+}
