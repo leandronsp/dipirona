@@ -1,6 +1,8 @@
 // Package mat provides immutable matrix operations for neural networks.
 package mat
 
+import "fmt"
+
 // Matrix represents an immutable 2D matrix of float64 values.
 type Matrix struct {
 	Rows int
@@ -50,6 +52,35 @@ func (m Matrix) Transpose() Matrix {
 	return Matrix{
 		Rows: m.Cols,
 		Cols: m.Rows,
+		data: data,
+	}
+}
+
+// Multiply returns the matrix product of m and other.
+// Panics if the number of columns in m does not equal the number of rows in other.
+func (m Matrix) Multiply(other Matrix) Matrix {
+	if m.Cols != other.Rows {
+		panic(fmt.Sprintf("dimension mismatch: cannot multiply %dx%d by %dx%d", m.Rows, m.Cols, other.Rows, other.Cols))
+	}
+
+	data := make([][]float64, m.Rows)
+	for i := range data {
+		data[i] = make([]float64, other.Cols)
+	}
+
+	for r := 0; r < m.Rows; r++ {
+		for c := 0; c < other.Cols; c++ {
+			var sum float64
+			for k := 0; k < m.Cols; k++ {
+				sum += m.data[r][k] * other.data[k][c]
+			}
+			data[r][c] = sum
+		}
+	}
+
+	return Matrix{
+		Rows: m.Rows,
+		Cols: other.Cols,
 		data: data,
 	}
 }

@@ -53,3 +53,30 @@ func TestTranspose_SwapsRowsAndCols(t *testing.T) {
 		t.Errorf("expected At(2,0) = 3, got %v", got)
 	}
 }
+
+func TestMultiply_CompatibleDimensions(t *testing.T) {
+	a := New([][]float64{
+		{1, 2, 3},
+		{4, 5, 6},
+	})
+	b := New([][]float64{
+		{7, 8},
+		{9, 10},
+		{11, 12},
+	})
+
+	result := a.Multiply(b)
+
+	if result.Rows != 2 {
+		t.Errorf("expected Rows = 2, got %d", result.Rows)
+	}
+	if result.Cols != 2 {
+		t.Errorf("expected Cols = 2, got %d", result.Cols)
+	}
+	if got := result.At(0, 0); got != 58 {
+		t.Errorf("expected At(0,0) = 58, got %v", got)
+	}
+	if got := result.At(1, 1); got != 154 {
+		t.Errorf("expected At(1,1) = 154, got %v", got)
+	}
+}
