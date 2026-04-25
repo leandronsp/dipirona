@@ -119,3 +119,19 @@ func TestZip_AddsCorrespondingElements(t *testing.T) {
 		t.Errorf("expected At(1,1) = 44, got %v", got)
 	}
 }
+
+func TestMap_AppliesScalarFunction(t *testing.T) {
+	m := New([][]float64{
+		{1, 2},
+		{3, 4},
+	})
+
+	result := m.Map(func(x float64) float64 { return x * 2 })
+
+	if got := result.At(0, 0); got != 2 {
+		t.Errorf("expected At(0,0) = 2, got %v", got)
+	}
+	if got := result.At(1, 1); got != 8 {
+		t.Errorf("expected At(1,1) = 8, got %v", got)
+	}
+}
