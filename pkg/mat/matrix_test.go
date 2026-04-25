@@ -120,6 +120,24 @@ func TestZip_AddsCorrespondingElements(t *testing.T) {
 	}
 }
 
+func TestZip_IncompatibleDimensionsPanics(t *testing.T) {
+	a := New([][]float64{
+		{1, 2},
+		{3, 4},
+	})
+	b := New([][]float64{
+		{1, 2, 3},
+	})
+
+	defer func() {
+		if r := recover(); r == nil {
+			t.Errorf("expected panic for incompatible dimensions")
+		}
+	}()
+
+	a.Zip(b, func(x, y float64) float64 { return x + y })
+}
+
 func TestMap_AppliesScalarFunction(t *testing.T) {
 	m := New([][]float64{
 		{1, 2},
