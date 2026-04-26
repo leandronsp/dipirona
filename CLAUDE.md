@@ -18,6 +18,9 @@ Minimal neural network library in Go. Inspired by [aspirina](https://github.com/
 pkg/model/     Neural network numerical model (weights, activations, gradients)
 pkg/calc/      Math primitives
 pkg/validate/  Input validation (primitive types only, no model dependency)
+pkg/layer/     Composable neural network layer (weights + activation + cache)
+pkg/network/   Feedforward MLP with backpropagation training
+pkg/random/    Random matrix initialization for weight seeding
 main.go        API smoke test
 ```
 
@@ -37,6 +40,7 @@ Always use `make`, never raw `go` commands directly.
 - Table-driven tests, 100% coverage on math packages
 - Panic only for programmer errors (dimension mismatch)
 - Always use `make` targets, never raw `go` commands
+- Subpackage constructors follow `pkg/layer.New()`, `pkg/network.New()`, `pkg/random.New()` pattern. No `NewLayer`, `NewNetwork`, etc.
 
 ## Roadmap
 See [ROADMAP.md](ROADMAP.md)

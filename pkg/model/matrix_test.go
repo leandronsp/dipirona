@@ -172,6 +172,49 @@ func TestMap_AppliesScalarFunction(t *testing.T) {
 	}
 }
 
+func TestSubtract_SubtractsCorrespondingElements(t *testing.T) {
+	a := New([][]float64{
+		{10, 20},
+		{30, 40},
+	})
+	b := New([][]float64{
+		{1, 2},
+		{3, 4},
+	})
+
+	result := a.Subtract(b)
+
+	if result.At(0, 0) != 9 || result.At(0, 1) != 18 || result.At(1, 0) != 27 || result.At(1, 1) != 36 {
+		t.Errorf("expected element-wise subtraction, got %v", result)
+	}
+}
+
+func TestSubtract_IncompatibleDimensionsPanics(t *testing.T) {
+	a := New([][]float64{{1, 2}})
+	b := New([][]float64{{1, 2, 3}})
+
+	defer func() {
+		if r := recover(); r == nil {
+			t.Errorf("expected panic for incompatible dimensions")
+		}
+	}()
+
+	a.Subtract(b)
+}
+
+func TestScale_MultipliesAllElementsByScalar(t *testing.T) {
+	m := New([][]float64{
+		{1, 2},
+		{3, 4},
+	})
+
+	result := m.Scale(0.5)
+
+	if result.At(0, 0) != 0.5 || result.At(0, 1) != 1.0 || result.At(1, 0) != 1.5 || result.At(1, 1) != 2.0 {
+		t.Errorf("expected scaled matrix, got %v", result)
+	}
+}
+
 func TestString_ReturnsReadableFormat(t *testing.T) {
 	m := New([][]float64{
 		{1, 2},

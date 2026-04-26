@@ -13,4 +13,4 @@ build:
 	go build -o dipirona .
 
 bench:
-	go test ./pkg/model ./pkg/model/layer -bench=. -benchtime=1s
+	go test ./pkg/model ./pkg/model/layer ./pkg/network -bench=. -benchtime=1s
