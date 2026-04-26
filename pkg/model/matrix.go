@@ -14,6 +14,20 @@ type Matrix struct {
 	data []float64
 }
 
+// offset returns the flat index for element (row, col) in row-major layout.
+func offset(cols, row, col int) int {
+	return row * cols + col
+}
+
+// assertUniform panics if any row length differs from cols.
+func assertUniform(values [][]float64, cols int) {
+	for i := range values {
+		if len(values[i]) != cols {
+			panic(fmt.Sprintf("ragged input: row %d has %d elements, expected %d", i, len(values[i]), cols))
+		}
+	}
+}
+
 // New creates a new Matrix from a 2D slice. The slice is deep-copied.
 func New(values [][]float64) Matrix {
 	rows := len(values)
@@ -22,15 +36,11 @@ func New(values [][]float64) Matrix {
 		cols = len(values[0])
 	}
 
-	for i := range values {
-		if len(values[i]) != cols {
-			panic(fmt.Sprintf("ragged input: row %d has %d elements, expected %d", i, len(values[i]), cols))
-		}
-	}
+	assertUniform(values, cols)
 
 	data := make([]float64, rows * cols)
 	for r := range values {
-		start := r * cols
+		start := offset(cols, r, 0)
 		end := start + cols
 		copy(data[start:end], values[r])
 	}
@@ -44,7 +54,7 @@ func New(values [][]float64) Matrix {
 
 // At returns the element at the given row and column.
 func (m Matrix) At(row, col int) float64 {
-	return m.data[row * m.Cols + col]
+	return m.data[offset(m.Cols, row, col)]
 }
 
 // Transpose returns a new Matrix with rows and columns swapped.
@@ -53,8 +63,8 @@ func (m Matrix) Transpose() Matrix {
 
 	for r := 0; r < m.Rows; r++ {
 		for c := 0; c < m.Cols; c++ {
-			src := r * m.Cols + c
-			dst := c * m.Rows + r
+			src := offset(m.Cols, r, c)
+			dst := offset(m.Rows, c, r)
 			data[dst] = m.data[src]
 		}
 	}
@@ -77,10 +87,10 @@ func (m Matrix) Multiply(other Matrix) Matrix {
 
 	for r := 0; r < m.Rows; r++ {
 		for k := 0; k < m.Cols; k++ {
-			ark := m.data[r * m.Cols + k]
+			ark := m.data[offset(m.Cols, r, k)]
 			for c := 0; c < other.Cols; c++ {
-				dst := r * other.Cols + c
-				src := k * other.Cols + c
+				dst := offset(other.Cols, r, c)
+				src := offset(other.Cols, k, c)
 				data[dst] += ark * other.data[src]
 			}
 		}
@@ -141,7 +151,7 @@ func (m Matrix) String() string {
 			if c > 0 {
 				b.WriteString(" ")
 			}
-			b.WriteString(fmt.Sprintf("%v", m.data[r * m.Cols + c]))
+			b.WriteString(fmt.Sprintf("%v", m.data[offset(m.Cols, r, c)]))
 		}
 		b.WriteString("]")
 	}
