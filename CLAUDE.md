@@ -10,12 +10,14 @@ Minimal neural network library in Go. Inspired by [aspirina](https://github.com/
 ## Domain
 - `pkg/model`: numerical structures (Matrix) that represent weights, activations, and gradients
 - `pkg/calc`: pure math functions (sigmoid, sigmoid_derivative)
+- `pkg/validate`: input validation (dimension checks, ragged rows)
 - Functional style: operations return new values, never mutate receivers
 
 ## Layout
 ```
 pkg/model/     Neural network numerical model (weights, activations, gradients)
 pkg/calc/      Math primitives
+pkg/validate/  Input validation (primitive types only, no model dependency)
 main.go        API smoke test
 ```
 

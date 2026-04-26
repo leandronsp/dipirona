@@ -41,4 +41,5 @@
 ## Project Layout
 - `pkg/model`: neural network numerical model (Matrix, weights, activations)
 - `pkg/calc`: pure math functions (sigmoid, etc.)
+- `pkg/validate`: input validation using primitive types only (no model dependency)
 - `main.go`: manual demonstration of the public API
