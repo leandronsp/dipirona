@@ -13,7 +13,7 @@ Foundation. Matrix operations and activation primitives.
 
 **Value:** Developers trust the math before building on it.
 
-## Phase 2: Layer Abstraction
+## Phase 2: Layer Abstraction ✅
 A composable neural network layer. Decoupled from any specific task.
 
 - Activation function as a first-class concept: `Activation` type with Sigmoid, ReLU, None
