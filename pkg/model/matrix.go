@@ -125,6 +125,17 @@ func (m Matrix) Map(fn func(float64) float64) Matrix {
 	}
 }
 
+// Subtract returns a new Matrix where each element is the result of subtracting
+// the corresponding element of other from m.
+func (m Matrix) Subtract(other Matrix) Matrix {
+	return m.Zip(other, func(a, b float64) float64 { return a - b })
+}
+
+// Scale returns a new Matrix where each element is multiplied by the given scalar.
+func (m Matrix) Scale(s float64) Matrix {
+	return m.Map(func(x float64) float64 { return x * s })
+}
+
 // String returns a human-readable representation of the matrix.
 func (m Matrix) String() string {
 	var b strings.Builder
