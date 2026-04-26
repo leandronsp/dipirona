@@ -25,6 +25,14 @@
 - Types named after what they are: `Matrix`, `Layer`, `Network`.
 - Functions rely on package context: `model.New()` not `model.NewMatrixFromSlice()`.
 
+## Build & Run
+- **Always use `make` targets.** Never invoke raw `go` commands directly.
+- `make test` — run all tests
+- `make fmt` — format code
+- `make vet` — static analysis
+- `make build` — compile binary
+- `make bench` — run benchmarks
+
 ## Project Layout
 - `pkg/model`: neural network numerical model (Matrix, weights, activations)
 - `pkg/calc`: pure math functions (sigmoid, etc.)

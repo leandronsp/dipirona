@@ -19,10 +19,22 @@ pkg/calc/      Math primitives
 main.go        API smoke test
 ```
 
+## Commands
+Always use `make`, never raw `go` commands directly.
+
+| Command | Purpose |
+|---------|---------|
+| `make test` | Run all tests |
+| `make fmt` | Format all Go files |
+| `make vet` | Run static analysis |
+| `make build` | Build the binary (`./dipirona`) |
+| `make bench` | Run benchmarks for `pkg/model` |
+
 ## Conventions
 - TDD: RED → GREEN → commit
 - Table-driven tests, 100% coverage on math packages
 - Panic only for programmer errors (dimension mismatch)
+- Always use `make` targets, never raw `go` commands
 
 ## Roadmap
 See [ROADMAP.md](ROADMAP.md)
