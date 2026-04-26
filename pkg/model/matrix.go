@@ -5,6 +5,8 @@ package model
 import (
 	"fmt"
 	"strings"
+
+	"dipirona/pkg/validate"
 )
 
 // Matrix represents an immutable 2D matrix of float64 values.
@@ -19,15 +21,6 @@ func offset(cols, row, col int) int {
 	return row * cols + col
 }
 
-// assertUniform panics if any row length differs from cols.
-func assertUniform(values [][]float64, cols int) {
-	for i := range values {
-		if len(values[i]) != cols {
-			panic(fmt.Sprintf("ragged input: row %d has %d elements, expected %d", i, len(values[i]), cols))
-		}
-	}
-}
-
 // New creates a new Matrix from a 2D slice. The slice is deep-copied.
 func New(values [][]float64) Matrix {
 	rows := len(values)
@@ -36,7 +29,7 @@ func New(values [][]float64) Matrix {
 		cols = len(values[0])
 	}
 
-	assertUniform(values, cols)
+	validate.RowsUniform(values, cols)
 
 	data := make([]float64, rows * cols)
 	for r := range values {
@@ -77,11 +70,8 @@ func (m Matrix) Transpose() Matrix {
 }
 
 // Multiply returns the matrix product of m and other.
-// Panics if the number of columns in m does not equal the number of rows in other.
 func (m Matrix) Multiply(other Matrix) Matrix {
-	if m.Cols != other.Rows {
-		panic(fmt.Sprintf("dimension mismatch: cannot multiply %dx%d by %dx%d", m.Rows, m.Cols, other.Rows, other.Cols))
-	}
+	validate.MultiplyCompatible(m.Rows, m.Cols, other.Rows, other.Cols)
 
 	data := make([]float64, m.Rows * other.Cols)
 
@@ -105,11 +95,8 @@ func (m Matrix) Multiply(other Matrix) Matrix {
 
 // Zip returns a new Matrix where each element is the result of applying fn
 // to the corresponding elements of m and other.
-// Panics if the matrices have different dimensions.
 func (m Matrix) Zip(other Matrix, fn func(float64, float64) float64) Matrix {
-	if m.Rows != other.Rows || m.Cols != other.Cols {
-		panic(fmt.Sprintf("dimension mismatch: cannot zip %dx%d with %dx%d", m.Rows, m.Cols, other.Rows, other.Cols))
-	}
+	validate.SameDimensions(m.Rows, m.Cols, other.Rows, other.Cols)
 
 	data := make([]float64, m.Rows * m.Cols)
 	for i := range data {
