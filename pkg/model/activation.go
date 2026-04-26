@@ -11,7 +11,8 @@ const (
 	ActivationReLU                      // Rectified linear unit
 )
 
-// Apply returns a new Matrix with the activation function applied element-wise.
+// Apply returns the result of applying the activation function element-wise.
+// For ActivationNone, returns the input unchanged.
 func (a Activation) Apply(m Matrix) Matrix {
 	switch a {
 	case ActivationNone:

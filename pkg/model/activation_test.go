@@ -34,6 +34,23 @@ func TestActivationSigmoid_ApplyAppliesSigmoid(t *testing.T) {
 	}
 }
 
+func TestApply_UnknownActivationPanics(t *testing.T) {
+	m := New([][]float64{{1.0}})
+
+	defer func() {
+		r := recover()
+		if r == nil {
+			t.Errorf("expected panic for unknown activation")
+		}
+		msg, ok := r.(string)
+		if !ok || msg != "unknown activation function" {
+			t.Errorf("expected 'unknown activation function', got %v", r)
+		}
+	}()
+
+	Activation(99).Apply(m)
+}
+
 func TestActivationReLU_ApplyClampsNegatives(t *testing.T) {
 	m := New([][]float64{
 		{2.5, -1.0},
