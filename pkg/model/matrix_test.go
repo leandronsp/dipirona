@@ -1,4 +1,4 @@
-package mat
+package model
 
 import "testing"
 

@@ -4,16 +4,16 @@ import (
 	"fmt"
 
 	"dipirona/pkg/calc"
-	"dipirona/pkg/mat"
+	"dipirona/pkg/model"
 )
 
 func main() {
 	// Create matrices
-	a := mat.New([][]float64{
+	a := model.New([][]float64{
 		{1, 2, 3},
 		{4, 5, 6},
 	})
-	b := mat.New([][]float64{
+	b := model.New([][]float64{
 		{7, 8},
 		{9, 10},
 		{11, 12},

@@ -1,5 +1,6 @@
-// Package mat provides immutable matrix operations for neural networks.
-package mat
+// Package model provides the numerical data structures and operations
+// that constitute a neural network: weights, activations, and gradients.
+package model
 
 import (
 	"fmt"
