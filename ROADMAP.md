@@ -26,7 +26,7 @@ A composable neural network layer. Decoupled from any specific task.
 
 **Value:** Building block for any feedforward architecture. Not locked to XOR.
 
-## Phase 3: Network Engine
+## Phase 3: Network Engine ✅
 Feedforward MLP with backpropagation training.
 
 - `Network`: ordered list of Layers, predict, train
