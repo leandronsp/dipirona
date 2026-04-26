@@ -28,7 +28,7 @@ func New(values [][]float64) Matrix {
 		}
 	}
 
-	data := make([]float64, rows*cols)
+	data := make([]float64, rows * cols)
 	for r := range values {
 		start := r * cols
 		end := start + cols
@@ -44,17 +44,17 @@ func New(values [][]float64) Matrix {
 
 // At returns the element at the given row and column.
 func (m Matrix) At(row, col int) float64 {
-	return m.data[row*m.Cols+col]
+	return m.data[row * m.Cols + col]
 }
 
 // Transpose returns a new Matrix with rows and columns swapped.
 func (m Matrix) Transpose() Matrix {
-	data := make([]float64, m.Rows*m.Cols)
+	data := make([]float64, m.Rows * m.Cols)
 
 	for r := 0; r < m.Rows; r++ {
 		for c := 0; c < m.Cols; c++ {
-			src := r*m.Cols + c
-			dst := c*m.Rows + r
+			src := r * m.Cols + c
+			dst := c * m.Rows + r
 			data[dst] = m.data[src]
 		}
 	}
@@ -73,14 +73,14 @@ func (m Matrix) Multiply(other Matrix) Matrix {
 		panic(fmt.Sprintf("dimension mismatch: cannot multiply %dx%d by %dx%d", m.Rows, m.Cols, other.Rows, other.Cols))
 	}
 
-	data := make([]float64, m.Rows*other.Cols)
+	data := make([]float64, m.Rows * other.Cols)
 
 	for r := 0; r < m.Rows; r++ {
 		for k := 0; k < m.Cols; k++ {
-			ark := m.data[r*m.Cols+k]
+			ark := m.data[r * m.Cols + k]
 			for c := 0; c < other.Cols; c++ {
-				dst := r*other.Cols + c
-				src := k*other.Cols + c
+				dst := r * other.Cols + c
+				src := k * other.Cols + c
 				data[dst] += ark * other.data[src]
 			}
 		}
@@ -101,7 +101,7 @@ func (m Matrix) Zip(other Matrix, fn func(float64, float64) float64) Matrix {
 		panic(fmt.Sprintf("dimension mismatch: cannot zip %dx%d with %dx%d", m.Rows, m.Cols, other.Rows, other.Cols))
 	}
 
-	data := make([]float64, m.Rows*m.Cols)
+	data := make([]float64, m.Rows * m.Cols)
 	for i := range data {
 		data[i] = fn(m.data[i], other.data[i])
 	}
@@ -141,7 +141,7 @@ func (m Matrix) String() string {
 			if c > 0 {
 				b.WriteString(" ")
 			}
-			b.WriteString(fmt.Sprintf("%v", m.data[r*m.Cols+c]))
+			b.WriteString(fmt.Sprintf("%v", m.data[r * m.Cols + c]))
 		}
 		b.WriteString("]")
 	}
