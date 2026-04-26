@@ -13,4 +13,4 @@ build:
 	go build -o dipirona .
 
 bench:
-	go test ./pkg/mat -bench=. -benchtime=1s
+	go test ./pkg/model -bench=. -benchtime=1s

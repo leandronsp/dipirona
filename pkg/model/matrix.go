@@ -1,5 +1,6 @@
-// Package mat provides immutable matrix operations for neural networks.
-package mat
+// Package model provides the numerical data structures and operations
+// that constitute a neural network: weights, activations, and gradients.
+package model
 
 import (
 	"fmt"
@@ -10,7 +11,12 @@ import (
 type Matrix struct {
 	Rows int
 	Cols int
-	data [][]float64
+	data []float64
+}
+
+// idx returns the flat index for (row, col).
+func (m Matrix) idx(row, col int) int {
+	return row*m.Cols + col
 }
 
 // New creates a new Matrix from a 2D slice. The slice is deep-copied.
@@ -21,10 +27,15 @@ func New(values [][]float64) Matrix {
 		cols = len(values[0])
 	}
 
-	data := make([][]float64, rows)
 	for i := range values {
-		data[i] = make([]float64, cols)
-		copy(data[i], values[i])
+		if len(values[i]) != cols {
+			panic(fmt.Sprintf("ragged input: row %d has %d elements, expected %d", i, len(values[i]), cols))
+		}
+	}
+
+	data := make([]float64, rows*cols)
+	for r := range values {
+		copy(data[r*cols:(r+1)*cols], values[r])
 	}
 
 	return Matrix{
@@ -36,19 +47,16 @@ func New(values [][]float64) Matrix {
 
 // At returns the element at the given row and column.
 func (m Matrix) At(row, col int) float64 {
-	return m.data[row][col]
+	return m.data[m.idx(row, col)]
 }
 
 // Transpose returns a new Matrix with rows and columns swapped.
 func (m Matrix) Transpose() Matrix {
-	data := make([][]float64, m.Cols)
-	for i := range data {
-		data[i] = make([]float64, m.Rows)
-	}
+	data := make([]float64, m.Rows*m.Cols)
 
 	for r := 0; r < m.Rows; r++ {
 		for c := 0; c < m.Cols; c++ {
-			data[c][r] = m.data[r][c]
+			data[c*m.Rows+r] = m.data[m.idx(r, c)]
 		}
 	}
 
@@ -66,18 +74,14 @@ func (m Matrix) Multiply(other Matrix) Matrix {
 		panic(fmt.Sprintf("dimension mismatch: cannot multiply %dx%d by %dx%d", m.Rows, m.Cols, other.Rows, other.Cols))
 	}
 
-	data := make([][]float64, m.Rows)
-	for i := range data {
-		data[i] = make([]float64, other.Cols)
-	}
+	data := make([]float64, m.Rows*other.Cols)
 
 	for r := 0; r < m.Rows; r++ {
-		for c := 0; c < other.Cols; c++ {
-			var sum float64
-			for k := 0; k < m.Cols; k++ {
-				sum += m.data[r][k] * other.data[k][c]
+		for k := 0; k < m.Cols; k++ {
+			ark := m.data[m.idx(r, k)]
+			for c := 0; c < other.Cols; c++ {
+				data[r*other.Cols+c] += ark * other.data[other.idx(k, c)]
 			}
-			data[r][c] = sum
 		}
 	}
 
@@ -96,15 +100,9 @@ func (m Matrix) Zip(other Matrix, fn func(float64, float64) float64) Matrix {
 		panic(fmt.Sprintf("dimension mismatch: cannot zip %dx%d with %dx%d", m.Rows, m.Cols, other.Rows, other.Cols))
 	}
 
-	data := make([][]float64, m.Rows)
+	data := make([]float64, m.Rows*m.Cols)
 	for i := range data {
-		data[i] = make([]float64, m.Cols)
-	}
-
-	for r := 0; r < m.Rows; r++ {
-		for c := 0; c < m.Cols; c++ {
-			data[r][c] = fn(m.data[r][c], other.data[r][c])
-		}
+		data[i] = fn(m.data[i], other.data[i])
 	}
 
 	return Matrix{
@@ -117,15 +115,9 @@ func (m Matrix) Zip(other Matrix, fn func(float64, float64) float64) Matrix {
 // Map returns a new Matrix where each element is the result of applying fn
 // to the corresponding element of m.
 func (m Matrix) Map(fn func(float64) float64) Matrix {
-	data := make([][]float64, m.Rows)
+	data := make([]float64, len(m.data))
 	for i := range data {
-		data[i] = make([]float64, m.Cols)
-	}
-
-	for r := 0; r < m.Rows; r++ {
-		for c := 0; c < m.Cols; c++ {
-			data[r][c] = fn(m.data[r][c])
-		}
+		data[i] = fn(m.data[i])
 	}
 
 	return Matrix{
@@ -148,7 +140,7 @@ func (m Matrix) String() string {
 			if c > 0 {
 				b.WriteString(" ")
 			}
-			b.WriteString(fmt.Sprintf("%v", m.data[r][c]))
+			b.WriteString(fmt.Sprintf("%v", m.data[m.idx(r, c)]))
 		}
 		b.WriteString("]")
 	}

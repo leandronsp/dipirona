@@ -8,13 +8,13 @@ Minimal neural network library in Go. Inspired by [aspirina](https://github.com/
 - Standard `testing` package
 
 ## Domain
-- `pkg/mat`: immutable Matrix with transpose, multiply, Map, Zip
+- `pkg/model`: numerical structures (Matrix) that represent weights, activations, and gradients
 - `pkg/calc`: pure math functions (sigmoid, sigmoid_derivative)
 - Functional style: operations return new values, never mutate receivers
 
 ## Layout
 ```
-pkg/mat/       Matrix type and ops
+pkg/model/     Neural network numerical model (weights, activations, gradients)
 pkg/calc/      Math primitives
 main.go        API smoke test
 ```
