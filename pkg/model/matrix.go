@@ -18,7 +18,7 @@ type Matrix struct {
 
 // offset returns the flat index for element (row, col) in row-major layout.
 func offset(cols, row, col int) int {
-	return row * cols + col
+	return row*cols + col
 }
 
 // New creates a new Matrix from a 2D slice. The slice is deep-copied.
@@ -31,7 +31,7 @@ func New(values [][]float64) Matrix {
 
 	validate.RowsUniform(values, cols)
 
-	data := make([]float64, rows * cols)
+	data := make([]float64, rows*cols)
 	for r := range values {
 		start := offset(cols, r, 0)
 		end := start + cols
@@ -52,7 +52,7 @@ func (m Matrix) At(row, col int) float64 {
 
 // Transpose returns a new Matrix with rows and columns swapped.
 func (m Matrix) Transpose() Matrix {
-	data := make([]float64, m.Rows * m.Cols)
+	data := make([]float64, m.Rows*m.Cols)
 
 	for r := 0; r < m.Rows; r++ {
 		for c := 0; c < m.Cols; c++ {
@@ -73,7 +73,7 @@ func (m Matrix) Transpose() Matrix {
 func (m Matrix) Multiply(other Matrix) Matrix {
 	validate.MultiplyCompatible(m.Rows, m.Cols, other.Rows, other.Cols)
 
-	data := make([]float64, m.Rows * other.Cols)
+	data := make([]float64, m.Rows*other.Cols)
 
 	for r := 0; r < m.Rows; r++ {
 		for k := 0; k < m.Cols; k++ {
@@ -98,7 +98,7 @@ func (m Matrix) Multiply(other Matrix) Matrix {
 func (m Matrix) Zip(other Matrix, fn func(float64, float64) float64) Matrix {
 	validate.SameDimensions(m.Rows, m.Cols, other.Rows, other.Cols)
 
-	data := make([]float64, m.Rows * m.Cols)
+	data := make([]float64, m.Rows*m.Cols)
 	for i := range data {
 		data[i] = fn(m.data[i], other.data[i])
 	}

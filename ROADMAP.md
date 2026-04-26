@@ -19,10 +19,10 @@ A composable neural network layer. Decoupled from any specific task.
 - Activation function as a first-class concept: `Activation` type with Sigmoid, ReLU, None
 - Calc: ReLU, ReLU derivative (alongside existing Sigmoid)
 - Layer struct: weights Matrix + Activation + output cache
-- `NewLayer(inputSize, outputSize, activation)` constructor with random initialization
+- `New(weights Matrix, activation)` constructor (takes a pre-built weight matrix)
 - `Forward(input Matrix) Matrix`: matmul then conditionally apply activation
 - `Weights()`, `Output()` accessors
-- Table-driven tests with fixed weights, known inputs, multiple activations
+- Tests with known inputs, multiple activations, panic paths
 
 **Value:** Building block for any feedforward architecture. Not locked to XOR.
 
