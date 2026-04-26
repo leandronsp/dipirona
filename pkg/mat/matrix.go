@@ -21,6 +21,12 @@ func New(values [][]float64) Matrix {
 		cols = len(values[0])
 	}
 
+	for i := range values {
+		if len(values[i]) != cols {
+			panic(fmt.Sprintf("ragged input: row %d has %d elements, expected %d", i, len(values[i]), cols))
+		}
+	}
+
 	data := make([][]float64, rows)
 	for i := range values {
 		data[i] = make([]float64, cols)

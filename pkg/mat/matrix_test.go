@@ -18,6 +18,24 @@ func TestNew_CreatesMatrixWithCorrectDimensions(t *testing.T) {
 	}
 }
 
+func TestNew_RaggedRowsPanics(t *testing.T) {
+	defer func() {
+		r := recover()
+		if r == nil {
+			t.Errorf("expected panic for ragged rows")
+		}
+		msg, ok := r.(string)
+		if !ok || msg == "" {
+			t.Errorf("expected non-empty panic message, got %v", r)
+		}
+	}()
+
+	New([][]float64{
+		{1, 2, 3},
+		{4, 5},
+	})
+}
+
 func TestNew_DeepCopiesValues(t *testing.T) {
 	input := [][]float64{
 		{1, 2},
