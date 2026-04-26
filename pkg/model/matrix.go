@@ -14,11 +14,6 @@ type Matrix struct {
 	data []float64
 }
 
-// idx returns the flat index for (row, col) in row-major order.
-func (m Matrix) idx(row, col int) int {
-	return row*m.Cols + col
-}
-
 // New creates a new Matrix from a 2D slice. The slice is deep-copied.
 func New(values [][]float64) Matrix {
 	rows := len(values)
@@ -49,7 +44,7 @@ func New(values [][]float64) Matrix {
 
 // At returns the element at the given row and column.
 func (m Matrix) At(row, col int) float64 {
-	return m.data[m.idx(row, col)]
+	return m.data[row*m.Cols+col]
 }
 
 // Transpose returns a new Matrix with rows and columns swapped.
@@ -58,7 +53,7 @@ func (m Matrix) Transpose() Matrix {
 
 	for r := 0; r < m.Rows; r++ {
 		for c := 0; c < m.Cols; c++ {
-			src := m.idx(r, c)
+			src := r*m.Cols + c
 			dst := c*m.Rows + r
 			data[dst] = m.data[src]
 		}
@@ -82,10 +77,10 @@ func (m Matrix) Multiply(other Matrix) Matrix {
 
 	for r := 0; r < m.Rows; r++ {
 		for k := 0; k < m.Cols; k++ {
-			ark := m.data[m.idx(r, k)]
+			ark := m.data[r*m.Cols+k]
 			for c := 0; c < other.Cols; c++ {
 				dst := r*other.Cols + c
-				src := other.idx(k, c)
+				src := k*other.Cols + c
 				data[dst] += ark * other.data[src]
 			}
 		}
@@ -146,7 +141,7 @@ func (m Matrix) String() string {
 			if c > 0 {
 				b.WriteString(" ")
 			}
-			b.WriteString(fmt.Sprintf("%v", m.data[m.idx(r, c)]))
+			b.WriteString(fmt.Sprintf("%v", m.data[r*m.Cols+c]))
 		}
 		b.WriteString("]")
 	}
