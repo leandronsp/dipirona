@@ -25,6 +25,11 @@
 - Types named after what they are: `Matrix`, `Layer`, `Network`.
 - Functions rely on package context: `model.New()` not `model.NewMatrixFromSlice()`.
 
+## Style
+- **Space around binary operators.** `a * b + c`, not `a*b+c`.
+  - Applies to arithmetic (`+ - * /`), comparisons (`== != < >`), and assignments (`=`).
+  - Exception: slice literals and type assertions keep their standard spacing.
+
 ## Build & Run
 - **Always use `make` targets.** Never invoke raw `go` commands directly.
 - `make test` — run all tests
