@@ -14,7 +14,7 @@ type Matrix struct {
 	data []float64
 }
 
-// idx returns the flat index for (row, col).
+// idx returns the flat index for (row, col) in row-major order.
 func (m Matrix) idx(row, col int) int {
 	return row*m.Cols + col
 }
@@ -35,7 +35,9 @@ func New(values [][]float64) Matrix {
 
 	data := make([]float64, rows*cols)
 	for r := range values {
-		copy(data[r*cols:(r+1)*cols], values[r])
+		start := r * cols
+		end := start + cols
+		copy(data[start:end], values[r])
 	}
 
 	return Matrix{
@@ -56,7 +58,9 @@ func (m Matrix) Transpose() Matrix {
 
 	for r := 0; r < m.Rows; r++ {
 		for c := 0; c < m.Cols; c++ {
-			data[c*m.Rows+r] = m.data[m.idx(r, c)]
+			src := m.idx(r, c)
+			dst := c*m.Rows + r
+			data[dst] = m.data[src]
 		}
 	}
 
@@ -80,7 +84,9 @@ func (m Matrix) Multiply(other Matrix) Matrix {
 		for k := 0; k < m.Cols; k++ {
 			ark := m.data[m.idx(r, k)]
 			for c := 0; c < other.Cols; c++ {
-				data[r*other.Cols+c] += ark * other.data[other.idx(k, c)]
+				dst := r*other.Cols + c
+				src := other.idx(k, c)
+				data[dst] += ark * other.data[src]
 			}
 		}
 	}
